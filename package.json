@@ -1,0 +1,24 @@
+{
+  "name": "br",
+  "version": "1.0.0",
+  "description": "Br is a JavaScript library that provides 35 useful methods.",
+  "main": "utility.js",
+  "scripts": {
+    "test": "eslint utility.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Brant-Ma/Br.git"
+  },
+  "author": "brantma <brant.mazhiyuan@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Brant-Ma/Br/issues"
+  },
+  "homepage": "https://github.com/Brant-Ma/Br#readme",
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.7.0"
+  }
+}
