@@ -115,12 +115,46 @@
    */
   Br.quickSort = (arr) => {
     if (arr.length < 2) return arr.slice()
-    const mid = arr[0]
-    const left = arr.slice(1).filter(item => item < mid)
-    const right = arr.slice(1).filter(item => item >= mid)
-    return Br.quickSort(left).concat(mid, Br.quickSort(right))
+    const one = arr[0]
+    const left = arr.slice(1).filter(item => item < one)
+    const right = arr.slice(1).filter(item => item >= one)
+    return Br.quickSort(left).concat(one, Br.quickSort(right))
   }
 
+  /**
+   * 线性搜索
+   * @param: arr {Array}
+   * @return: {Array}
+   */
+  Br.linearSearch = (arr, item) => {
+    const len = arr.length
+    for (let i = 0; i < len; i += 1) {
+      if (arr[i] === item) return i
+    }
+    return -1
+  }
+
+  /**
+   * 二分搜索
+   * @param: arr {Array}
+   * @return: {Array}
+   */
+  Br.binarySearch = (arr, item) => {
+    const sort = Br.quickSort(arr)
+    let low = 0
+    let high = sort.length - 1
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2)
+      if (sort[mid] < item) {
+        low = mid + 1
+      } else if (sort[mid] > item) {
+        high = mid - 1
+      } else {
+        return mid
+      }
+    }
+    return -1
+  }
 
   /**
    * 判断对象的具体类型
