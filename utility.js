@@ -1,10 +1,129 @@
 (function iife() {
+  // shortcuts
+  const has = Object.prototype.hasOwnProperty
+  // private namespace
+  const Pr = {}
+  // public namespace
   const Br = {}
 
-  // private identifier
-  const has = Object.prototype.hasOwnProperty
+  /**
+   * 交换两个元素
+   * @param: former {Primitive}
+   * @param: latter {Primitive}
+   * @return: {Array}
+   */
+  Pr.swap = (former, latter) => {
+    const temp = former
+    former = latter
+    latter = temp
+  }
 
-  /* 判断对象的具体类型
+  /**
+   * 冒泡排序
+   * @param: arr {Array}
+   * @return: {Array}
+   */
+  Br.bubbleSort = (arr) => {
+    const len = arr.length
+    // 共 len - 1 轮
+    for (let i = 0; i < len - 1; i += 1) {
+      // 已冒泡出 i 个最大值，本轮从第 1 个开始，到第 len - i 个
+      for (let j = 0; j < len - i - 1; j += 1) {
+        if (arr[j] > arr[j + 1]) {
+          Pr.swap(arr[j], arr[j + 1])
+        }
+      }
+    }
+    return arr
+  }
+
+  /**
+   * 选择排序
+   * @param: arr {Array}
+   * @return: {Array}
+   */
+  Br.selectionSort = (arr) => {
+    const len = arr.length
+    // 共 len - 1 轮
+    for (let i = 0; i < len - 1; i += 1) {
+      // 假设第 1 + i 个是最小值
+      let min = i
+      // 已选择出 i 个最小值，本轮从第 1 + i + 1 个开始，到最后一个
+      for (let j = i + 1; j < len; j += 1) {
+        if (arr[min] > arr[j]) {
+          min = j
+        }
+      }
+      Pr.swap(arr[i], arr[min])
+    }
+    return arr
+  }
+
+  /**
+   * 插入排序
+   * @param: arr {Array}
+   * @return: {Array}
+   */
+  Br.insertionSort = (arr) => {
+    const len = arr.length
+    // 共 len - 1 轮
+    for (let i = 1; i < len; i += 1) {
+      // 对于第 i + 1 个待插入的元素，遍历已排好序的前 i 个
+      for (let j = 0; j < i; j += 1) {
+        if (arr[j] > arr[i]) {
+          arr.splice(j, 0, arr[i])
+          arr.splice(i + 1, 1)
+        }
+      }
+    }
+    return arr
+  }
+
+  /**
+   * 合并数组
+   * @param: left {Array}
+   * @param: right {Array}
+   * @return: {Array}
+   */
+  Pr.merge = (left, right) => {
+    const ret = []
+    while (left.length && right.length) {
+      ret.push(left[0] < right[0] ? left.shift() : right.shift())
+    }
+    return ret.concat(left.length ? left : right)
+  }
+
+  /**
+   * 归并排序
+   * @param: arr {Array}
+   * @return: {Array}
+   */
+  Br.mergeSort = (arr) => {
+    // 拆分数组
+    if (arr.length < 2) return arr.slice()
+    const mid = Math.floor(arr.length / 2)
+    const left = Br.mergeSort(arr.slice(0, mid))
+    const right = Br.mergeSort(arr.slice(mid))
+    // 合并数组
+    return Pr.merge(left, right)
+  }
+
+  /**
+   * 快速排序
+   * @param: arr {Array}
+   * @return: {Array}
+   */
+  Br.quickSort = (arr) => {
+    if (arr.length < 2) return arr.slice()
+    const mid = arr[0]
+    const left = arr.slice(1).filter(item => item < mid)
+    const right = arr.slice(1).filter(item => item >= mid)
+    return Br.quickSort(left).concat(mid, Br.quickSort(right))
+  }
+
+
+  /**
+   * 判断对象的具体类型
    * @param: obj {Object}
    * @param: type {String}
    * @return: {Boolean}
@@ -14,7 +133,8 @@
     return Br.strEqual(type, fragment, false)
   }
 
-  /* 忽略大小写的字符串比较
+  /**
+   * 忽略大小写的字符串比较
    * @param: str1 {String}
    * @param: str2 {String}
    * @param: sensitive {Boolean}
@@ -27,7 +147,8 @@
     return str1.toLowerCase() === str2.toLowerCase()
   }
 
-  /* 判断数值是否为素数
+  /**
+   * 判断数值是否为素数
    * @param: n {Number}
    * @return: {Boolean}
    */
@@ -38,7 +159,8 @@
     return n > 1
   }
 
-  /* 数组的随机排序
+  /**
+   * 数组的随机排序
    * @param: arr {Array}
    * @return: {Array}
    */
@@ -46,7 +168,8 @@
     arr.sort(() => Math.random() - 0.5)
   }
 
-  /* 对象的拷贝
+  /**
+   * 对象的拷贝
    * @param: obj {Object}
    * @param: deep {Boolean}
    * @return: {Object}
@@ -66,7 +189,8 @@
     return result
   }
 
-  /* 生成范围内的随机数
+  /**
+   * 生成范围内的随机数
    * @param: lowerValue {Number}
    * @param: upperValue {Number}
    * @return: {Number}
@@ -76,7 +200,8 @@
     return Math.floor((Math.random() * choices) + lowerValue)
   }
 
-  /* 判断对象的属性是否来自原型
+  /**
+   * 判断对象的属性是否来自原型
    * @param: obj {Object}
    * @param: key {String}
    * @return: {Boolean}
@@ -85,7 +210,8 @@
     (key in obj) && !has.call(obj, key)
   )
 
-  /* 获取查询字符串的键值对形式
+  /**
+   * 获取查询字符串的键值对形式
    * @return: {Object}
    */
   Br.queryString2keyValue = () => {
@@ -100,7 +226,8 @@
     return result
   }
 
-  /* 添加键值对到 url 字符串中
+  /**
+   * 添加键值对到 url 字符串中
    * @param: url {String}
    * @param: key {String}
    * @param: value {String}
@@ -115,30 +242,39 @@
     return str
   }
 
-  /* 识别用户代理
+  /**
+   * 识别用户代理
    * @return: {String}
    */
   Br.whichBrowser = () => {
     const str = navigator.userAgent
-    if (/qqbrowser/i.test(str)) return 'QQ Browser' // 含子串 chrome safari qqbrowser
-    if (/opr/i.test(str)) return 'Opera Browser' // 含子串 chrome safari opr
-    if (/chrome/i.test(str)) return 'Google Chrome' // 含子串 chrome safari
-    if (/safari/i.test(str)) return 'Apple Safari' // 含子串 safari
-    if (/firefox/i.test(str)) return 'Mizilla Firefox' // 含子串 firefox
+    // QQ 包含以下字串：chrome safari qqbrowser
+    if (/qqbrowser/i.test(str)) return 'QQ Browser'
+    // Opera 包含以下字串：chrome safari opr
+    if (/opr/i.test(str)) return 'Opera Browser'
+    // Chrome 包含以下字串：chrome safari
+    if (/chrome/i.test(str)) return 'Google Chrome'
+    // Safari 包含 safari
+    if (/safari/i.test(str)) return 'Apple Safari'
+    // Firefox 包含 firefox
+    if (/firefox/i.test(str)) return 'Mizilla Firefox'
+    // 剩下的 ua 不想关心...
     return 'Unknown UA, maybe some kind of M$\'s'
   }
 
-  /* 识别操作系统
+  /**
+   * 识别操作系统
    * @return: {String}
    */
   Br.whichSystem = () => {
     const str = navigator.platform
     if (/mac/i.test(str)) return 'macOS'
     if (/win/i.test(str)) return 'Windows'
-    return 'Linux'
+    return 'maybe Linux'
   }
 
-  /* 基本断言
+  /**
+   * 基本断言
    * @param: val {Boolean}
    * @param: msg {String}
    * @return: {Error}
@@ -149,7 +285,8 @@
     }
   }
 
-  /* 上下文代理
+  /**
+   * 上下文代理
    * @param: fn {Function}
    * @param: ctx {Object}
    * @return: {Function}
@@ -160,7 +297,8 @@
     }
   )
 
-  /* 对象构造器
+  /**
+   * 对象构造器
    * @param: obj {Object}
    * @return: {Object}
    */
@@ -170,7 +308,8 @@
     return new F()
   }
 
-  /* 设置对象权限
+  /**
+   * 设置对象权限
    * @param: obj {Object}
    * @param: limit {Number}
    * @return: {Object}
@@ -188,7 +327,8 @@
     }
   }
 
-  /* 数组分块处理
+  /**
+   * 数组分块处理
    * @param: arr {Array}
    * @param: process {Function}
    * @param: interval {Number}
@@ -205,7 +345,8 @@
     }, interval)
   }
 
-  /* 函数节流执行
+  /**
+   * 函数节流执行
    * @param: fn {Function}
    * @param: interval {Number}
    * @return: {Undefined}
