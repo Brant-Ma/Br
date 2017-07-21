@@ -276,11 +276,26 @@
     return str
   }
 
+
+  /**
+   * 识别宿主环境
+   * @return: {String}
+   */
+  Br.whichContext = () => {
+    if (typeof require === 'undefined') {
+      return 'browser'
+    }
+    return 'node'
+  }
+
   /**
    * 识别用户代理
    * @return: {String}
    */
   Br.whichBrowser = () => {
+    if (Br.whichContext() === 'node') {
+      return 'the current environment is node, not browser'
+    }
     const str = navigator.userAgent
     // QQ 包含以下字串：chrome safari qqbrowser
     if (/qqbrowser/i.test(str)) return 'QQ Browser'
@@ -301,6 +316,9 @@
    * @return: {String}
    */
   Br.whichSystem = () => {
+    if (Br.whichContext() === 'node') {
+      return os.platform()
+    }
     const str = navigator.platform
     if (/mac/i.test(str)) return 'macOS'
     if (/win/i.test(str)) return 'Windows'
