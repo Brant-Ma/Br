@@ -4,7 +4,7 @@
   "description": "Br is a JavaScript library that provides 35 useful methods.",
   "main": "utility.js",
   "scripts": {
-    "test": "eslint utility.js"
+    "test": "eslint utility.js && mocha"
   },
   "repository": {
     "type": "git",
@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/Brant-Ma/Br#readme",
   "devDependencies": {
+    "chai": "^4.1.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
-    "eslint-plugin-import": "^2.7.0"
+    "eslint-plugin-import": "^2.7.0",
+    "mocha": "^3.4.2"
   }
 }

@@ -1,36 +1,41 @@
-(function iife() {
-  // shortcuts
-  const has = Object.prototype.hasOwnProperty
-  // private namespace
-  const Pr = {}
-  // public namespace
+(function (root) {
+  // namespace & shortcuts
   const Br = {}
+  const has = Object.prototype.hasOwnProperty
 
   /**
-   * 交换两个元素
-   * @param: former {Primitive}
-   * @param: latter {Primitive}
-   * @return: {Array}
+   * 识别宿主环境
+   * @return: {String}
    */
-  Pr.swap = (former, latter) => {
-    const temp = former
-    former = latter
-    latter = temp
+  const whichContext = () => {
+    if (typeof require === 'undefined') {
+      return 'browser'
+    }
+    return 'node'
+  }
+  Br.whichContext = whichContext
+
+  // export module
+  if (whichContext() === 'node') {
+    module.exports = Br
+  } else {
+    root.Br = Br
   }
 
   /**
    * 冒泡排序
-   * @param: arr {Array}
+   * @param: src {Array}
    * @return: {Array}
    */
-  Br.bubbleSort = (arr) => {
+  Br.bubbleSort = (src = []) => {
+    const [...arr] = src
     const len = arr.length
     // 共 len - 1 轮
     for (let i = 0; i < len - 1; i += 1) {
       // 已冒泡出 i 个最大值，本轮从第 1 个开始，到第 len - i 个
       for (let j = 0; j < len - i - 1; j += 1) {
         if (arr[j] > arr[j + 1]) {
-          Pr.swap(arr[j], arr[j + 1])
+          [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
         }
       }
     }
@@ -39,10 +44,11 @@
 
   /**
    * 选择排序
-   * @param: arr {Array}
+   * @param: src {Array}
    * @return: {Array}
    */
-  Br.selectionSort = (arr) => {
+  Br.selectionSort = (src = []) => {
+    const [...arr] = src
     const len = arr.length
     // 共 len - 1 轮
     for (let i = 0; i < len - 1; i += 1) {
@@ -54,17 +60,18 @@
           min = j
         }
       }
-      Pr.swap(arr[i], arr[min])
+      [arr[i], arr[min]] = [arr[min], arr[i]]
     }
     return arr
   }
 
   /**
    * 插入排序
-   * @param: arr {Array}
+   * @param: src {Array}
    * @return: {Array}
    */
-  Br.insertionSort = (arr) => {
+  Br.insertionSort = (src = []) => {
+    const [...arr] = src
     const len = arr.length
     // 共 len - 1 轮
     for (let i = 1; i < len; i += 1) {
@@ -85,7 +92,7 @@
    * @param: right {Array}
    * @return: {Array}
    */
-  Pr.merge = (left, right) => {
+  const merge = (left, right) => {
     const ret = []
     while (left.length && right.length) {
       ret.push(left[0] < right[0] ? left.shift() : right.shift())
@@ -98,14 +105,14 @@
    * @param: arr {Array}
    * @return: {Array}
    */
-  Br.mergeSort = (arr) => {
+  Br.mergeSort = (arr = []) => {
     // 拆分数组
     if (arr.length < 2) return arr.slice()
     const mid = Math.floor(arr.length / 2)
     const left = Br.mergeSort(arr.slice(0, mid))
     const right = Br.mergeSort(arr.slice(mid))
     // 合并数组
-    return Pr.merge(left, right)
+    return merge(left, right)
   }
 
   /**
@@ -113,7 +120,7 @@
    * @param: arr {Array}
    * @return: {Array}
    */
-  Br.quickSort = (arr) => {
+  Br.quickSort = (arr = []) => {
     if (arr.length < 2) return arr.slice()
     const one = arr[0]
     const left = arr.slice(1).filter(item => item < one)
@@ -126,7 +133,7 @@
    * @param: arr {Array}
    * @return: {Array}
    */
-  Br.linearSearch = (arr, item) => {
+  Br.linearSearch = (arr = [], item) => {
     const len = arr.length
     for (let i = 0; i < len; i += 1) {
       if (arr[i] === item) return i
@@ -139,7 +146,8 @@
    * @param: arr {Array}
    * @return: {Array}
    */
-  Br.binarySearch = (arr, item) => {
+  Br.binarySearch = (arr = [], item) => {
+    if (item === undefined) return -1
     const sort = Br.quickSort(arr)
     let low = 0
     let high = sort.length - 1
@@ -276,18 +284,6 @@
     return str
   }
 
-
-  /**
-   * 识别宿主环境
-   * @return: {String}
-   */
-  Br.whichContext = () => {
-    if (typeof require === 'undefined') {
-      return 'browser'
-    }
-    return 'node'
-  }
-
   /**
    * 识别用户代理
    * @return: {String}
@@ -324,30 +320,6 @@
     if (/win/i.test(str)) return 'Windows'
     return 'maybe Linux'
   }
-
-  /**
-   * 基本断言
-   * @param: val {Boolean}
-   * @param: msg {String}
-   * @return: {Error}
-   */
-  Br.assert = (val, msg) => {
-    if (!val) {
-      throw (msg || `${val} does not equal true`)
-    }
-  }
-
-  /**
-   * 上下文代理
-   * @param: fn {Function}
-   * @param: ctx {Object}
-   * @return: {Function}
-   */
-  Br.proxy = (fn, ctx, ...args) => (
-    function f() {
-      return fn.apply(ctx, ...args)
-    }
-  )
 
   /**
    * 对象构造器
@@ -411,5 +383,27 @@
     }, interval)
   }
 
-  this.Br = Br
-}())
+  /**
+   * 获取八位日期戳
+   * @param: date {Date}
+   * @return: {String}
+   */
+  Br.getYMD = (date = new Date()) => {
+    const y = date.getYear() + 1900
+    let m = date.getMonth() + 1
+    let d = date.getDate()
+    m = m < 10 ? `0${m}` : m
+    d = d < 10 ? `0${d}` : d
+    return y + m + d
+  }
+
+  /**
+   * 获取可读的 URL
+   * @param: url {String}
+   * @return: {String}
+   */
+  Br.friendlyURL = (url = '') => {
+    const noHead = url.replace(/^https?:\/\//, '')
+    return noHead.replace(/\/$/, '')
+  }
+}(this))
