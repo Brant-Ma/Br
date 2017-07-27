@@ -1,4 +1,5 @@
-# Br
+[![Build Status](https://travis-ci.org/Brant-Ma/Br.svg?branch=master)](https://travis-ci.org/Brant-Ma/Br)
+
 ![Br](./logo.png)
 
 Br is a JavaScript library that provides 35 useful methods.
