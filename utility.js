@@ -237,7 +237,8 @@
    * @param: upperValue {Number}
    * @return: {Number}
    */
-  Br.selectFrom = (lowerValue, upperValue) => {
+  Br.selectFrom = (lowerValue = 0, upperValue) => {
+    if (upperValue === undefined) return lowerValue
     const choices = (upperValue - lowerValue) + 1
     return Math.floor((Math.random() * choices) + lowerValue)
   }
