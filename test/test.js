@@ -1,6 +1,28 @@
 const { expect } = require('chai')
 const Br = require('../utility.js')
 
+describe('🐸  method that return a boolean', () => {
+  it('isPrime', () => {
+    expect(Br.isPrime()).to.equal(false)
+    expect(Br.isPrime(1)).to.equal(false)
+    expect(Br.isPrime(17)).to.equal(true)
+  })
+
+  it('strEqual', () => {
+    expect(Br.strEqual('hello', 'hello')).to.equal(true)
+    expect(Br.strEqual('hello', 'Hello')).to.equal(false)
+    expect(Br.strEqual('hello', 'hello', false)).to.equal(true)
+    expect(Br.strEqual('hello', 'Hello', false)).to.equal(true)
+  })
+
+  it('isType', () => {
+    expect(Br.isType([], 'array')).to.equal(true)
+    expect(Br.isType({}, 'object')).to.equal(true)
+    expect(Br.isType(/^\/$/, 'regexp')).to.equal(true)
+    expect(Br.isType(new Date(), 'date')).to.equal(true)
+  })
+})
+
 describe('🐸  method that return a number', () => {
   it('selectFrom', () => {
     const noArg = Br.selectFrom()

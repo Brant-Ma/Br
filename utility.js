@@ -182,7 +182,7 @@
    * @param: sensitive {Boolean}
    * @return: {Boolean}
    */
-  Br.strEqual = (str1, str2, sensitive) => {
+  Br.strEqual = (str1, str2, sensitive = true) => {
     if (sensitive) {
       return str1 === str2
     }
@@ -195,6 +195,7 @@
    * @return: {Boolean}
    */
   Br.isPrime = (n) => {
+    if (n === undefined) return false
     for (let a = 2; a < Math.sqrt(n); a += 1) {
       if (n % a < 1) return false
     }
