@@ -32,6 +32,28 @@ describe('🐸  method that return a number', () => {
     expect(oneArg).to.equal(10)
     expect(normalChoice).to.be.at.least(10).and.at.most(20)
   })
+
+  const arr = [5, 4, 3, 2, 1]
+
+  const assertion4search = (oneArg, fail, successful) => {
+    expect(oneArg).to.equal(-1)
+    expect(fail).to.equal(-1)
+    expect(successful).to.equal(2)
+  }
+
+  it('linearSearch', () => {
+    const oneArg = Br.linearSearch(arr)
+    const fail = Br.linearSearch(arr, 6)
+    const successful = Br.linearSearch(arr, 3)
+    assertion4search(oneArg, fail, successful)
+  })
+
+  it('binarySearch', () => {
+    const oneArg = Br.binarySearch(arr)
+    const fail = Br.binarySearch(arr, 6)
+    const successful = Br.binarySearch(arr, 3)
+    assertion4search(oneArg, fail, successful)
+  })
 })
 
 describe('🐸  method that return a string', () => {
@@ -50,7 +72,7 @@ describe('🐸  method that return a string', () => {
   })
 })
 
-describe('🐸  method that sort an array', () => {
+describe('🐸  method that return an array', () => {
   const dist = [1, 2, 3, 4, 5]
   const srcCopy = [5, 4, 3, 2, 1]
 
@@ -96,26 +118,12 @@ describe('🐸  method that sort an array', () => {
   })
 })
 
-describe('🐸  method that search in an array', () => {
-  const arr = [5, 4, 3, 2, 1]
-
-  const assertion4search = (oneArg, fail, successful) => {
-    expect(oneArg).to.equal(-1)
-    expect(fail).to.equal(-1)
-    expect(successful).to.equal(2)
-  }
-
-  it('linearSearch', () => {
-    const oneArg = Br.linearSearch(arr)
-    const fail = Br.linearSearch(arr, 6)
-    const successful = Br.linearSearch(arr, 3)
-    assertion4search(oneArg, fail, successful)
-  })
-
-  it('binarySearch', () => {
-    const oneArg = Br.binarySearch(arr)
-    const fail = Br.binarySearch(arr, 6)
-    const successful = Br.binarySearch(arr, 3)
-    assertion4search(oneArg, fail, successful)
+describe('🐸  method that return a function', () => {
+  it('curry', () => {
+    const func = (one, two, three) => one + two + three
+    expect(Br.curry(func)('a', 'b', 'c')).to.equal('abc')
+    expect(Br.curry(func, 'a')('b', 'c')).to.equal('abc')
+    expect(Br.curry(func, 'a', 'b')('c')).to.equal('abc')
+    expect(Br.curry(func, 'a', 'b', 'c')()).to.equal('abc')
   })
 })

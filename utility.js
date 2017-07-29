@@ -408,4 +408,12 @@
     const noHead = url.replace(/^https?:\/\//, '')
     return noHead.replace(/\/$/, '')
   }
+
+  /**
+   * 函数部分传参
+   * @param: func {Function}
+   * @param: args {Array}
+   * @return: {Function}
+   */
+  Br.curry = (func, ...args) => func.bind(func, ...args)
 }(this))
