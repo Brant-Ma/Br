@@ -165,7 +165,7 @@
   }
 
   /**
-   * 判断对象的具体类型
+   * 判断对象是否是某个具体类型
    * @param: obj {Object}
    * @param: type {String}
    * @return: {Boolean}
@@ -173,6 +173,16 @@
   Br.isType = (obj, type) => {
     const fragment = Object.prototype.toString.call(obj).slice(8, -1)
     return Br.strEqual(type, fragment, false)
+  }
+
+  /**
+   * 获取对象的具体类型
+   * @param: obj {Object}
+   * @return: {String}
+   */
+  Br.type = (obj) => {
+    const fragment = Object.prototype.toString.call(obj).slice(8, -1)
+    return fragment.toLowerCase()
   }
 
   /**

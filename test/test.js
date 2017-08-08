@@ -85,6 +85,13 @@ describe('🐸  method that return a string', () => {
     expect(t.timeRecord(plus)).to.be.a('string')
     expect(t.timeRecord(plus, 100)).to.be.a('string')
   })
+
+  it('type', () => {
+    expect(t.type([])).to.equal('array')
+    expect(t.type({})).to.equal('object')
+    expect(t.type(/^\/$/)).to.equal('regexp')
+    expect(t.type(new Date())).to.equal('date')
+  })
 })
 
 describe('🐸  method that return an array', () => {
