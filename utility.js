@@ -324,17 +324,6 @@
   }
 
   /**
-   * 对象构造器
-   * @param: obj {Object}
-   * @return: {Object}
-   */
-  Br.create = (obj) => {
-    const F = function f() {}
-    F.prototype = obj
-    return new F()
-  }
-
-  /**
    * 设置对象权限
    * @param: obj {Object}
    * @param: limit {Number}
@@ -372,17 +361,43 @@
   }
 
   /**
-   * 函数节流执行
+   * 防抖：高频事件结束后 delay 毫秒执行一次
+   * @param: fn {Function}
+   * @param: delay {Number}
+   * @return: {Undefined}
+   */
+  Br.debounce = (fn, delay = 100) => {
+    let timer
+    return function d(...args) {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        fn.apply(this, args)
+      }, delay)
+    }
+  }
+
+  /**
+   * 节流：高频事件每 interval 毫秒执行一次
    * @param: fn {Function}
    * @param: interval {Number}
    * @return: {Undefined}
    */
-  Br.throttle = (fn, interval) => {
-    const f = fn
-    clearTimeout(f.timer)
-    f.timer = setTimeout(() => {
-      f()
-    }, interval)
+  Br.throttle = (fn, interval = 100) => {
+    let timer
+    let last
+    return function t(...args) {
+      const now = new Date().getTime()
+      if (last && now - last < interval) {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+          last = now
+          fn.apply(this, args)
+        }, interval)
+      } else {
+        last = now
+        fn.apply(this, args)
+      }
+    }
   }
 
   /**
@@ -416,4 +431,50 @@
    * @return: {Function}
    */
   Br.curry = (func, ...args) => func.bind(func, ...args)
+
+  /**
+   * 记录操作耗时
+   * @param: func {Function}
+   * @return: {String}
+   */
+  Br.timeRecord = (func, times = 1) => {
+    const start = new Date().getTime()
+    for (let i = 0; i < times; i += 1) {
+      func()
+    }
+    const end = new Date().getTime()
+    return `It costs ${end - start}ms`
+  }
+
+  /**
+   * 判断对象是否可迭代
+   * @param: obj {Object}
+   * @return: {Boolean}
+   */
+  Br.isIterable = (obj) => {
+    const prop = obj[Symbol.iterator]
+    return typeof prop === 'function'
+  }
+
+  /**
+   * 对象构造器
+   * @param: obj {Object}
+   * @return: {Object}
+   */
+  Br.create = (obj) => {
+    const F = function f() {}
+    F.prototype = obj
+    return new F()
+  }
+
+  /**
+   * 混入构造器
+   * @param: mixins {Array}
+   * @return: {Object}
+   */
+  Br.mixin = (...mixins) => {
+    const base = function f() {}
+    Object.assign(base.prototype, ...mixins)
+    return base
+  }
 }(this))
