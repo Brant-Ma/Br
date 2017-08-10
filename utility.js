@@ -2,6 +2,7 @@
   // namespace & shortcuts
   const Br = {}
   const has = Object.prototype.hasOwnProperty
+  const label = Object.prototype.toString
 
   /**
    * 识别宿主环境
@@ -13,6 +14,7 @@
     }
     return 'node'
   }
+
   Br.whichContext = whichContext
 
   // export module
@@ -171,7 +173,7 @@
    * @return: {Boolean}
    */
   Br.isType = (obj, type) => {
-    const fragment = Object.prototype.toString.call(obj).slice(8, -1)
+    const fragment = label.call(obj).slice(8, -1)
     return Br.strEqual(type, fragment, false)
   }
 
@@ -181,7 +183,7 @@
    * @return: {String}
    */
   Br.type = (obj) => {
-    const fragment = Object.prototype.toString.call(obj).slice(8, -1)
+    const fragment = label.call(obj).slice(8, -1)
     return fragment.toLowerCase()
   }
 
@@ -361,6 +363,7 @@
    */
   Br.chunk = (arr, process, interval) => {
     const data = arr.slice()
+
     setTimeout(function p() {
       const item = data.shift()
       process(item)
@@ -371,6 +374,48 @@
   }
 
   /**
+   * 超时函数的终止化
+   * @param: fn {Function}
+   * @param: delay {Number}
+   * @return: {Function}
+   */
+  Br.timeoutify = (fn, delay) => {
+    let timer = setTimeout(() => {
+      timer = null
+      throw Error('timeout')
+    }, delay)
+
+    return (...args) => {
+      if (timer) {
+        clearTimeout(timer)
+        fn.apply(this, args)
+      }
+    }
+  }
+
+  /**
+   * 同步函数的异步化
+   * @param: fn {Function}
+   * @return: {Function}
+   */
+  Br.asyncify = (fn) => {
+    let curTick = true
+    setTimeout(() => {
+      curTick = false
+    }, 0)
+
+    return (...args) => {
+      if (curTick) {
+        setTimeout(() => {
+          fn.apply(this, args)
+        }, 0)
+      } else {
+        fn.apply(this, args)
+      }
+    }
+  }
+
+  /**
    * 防抖：高频事件结束后 delay 毫秒执行一次
    * @param: fn {Function}
    * @param: delay {Number}
@@ -378,6 +423,7 @@
    */
   Br.debounce = (fn, delay = 100) => {
     let timer
+
     return function d(...args) {
       clearTimeout(timer)
       timer = setTimeout(() => {
@@ -395,6 +441,7 @@
   Br.throttle = (fn, interval = 100) => {
     let timer
     let last
+
     return function t(...args) {
       const now = new Date().getTime()
       if (last && now - last < interval) {
@@ -436,11 +483,11 @@
 
   /**
    * 函数部分传参
-   * @param: func {Function}
+   * @param: fn {Function}
    * @param: args {Array}
    * @return: {Function}
    */
-  Br.curry = (func, ...args) => func.bind(func, ...args)
+  Br.curry = (fn, ...args) => func.bind(fn, ...args)
 
   /**
    * 记录操作耗时
