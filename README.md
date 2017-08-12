@@ -2,7 +2,9 @@
 
 ![Br](./logo.png)
 
-> Br is a JavaScript library that provides 35 useful or basic methods.
+> Br is a JavaScript library, which provides 35 useful or basic methods.
+
+Br is just a toy at present, so be careful if you want to try it.
 
 ## About the repo name
 
