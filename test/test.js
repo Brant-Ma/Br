@@ -22,6 +22,11 @@ describe('🐸  method that return a boolean', () => {
     expect(t.isType(new Date(), 'date')).to.equal(true)
   })
 
+  it('isNull', () => {
+    expect(t.isNull(null)).to.equal(true)
+    expect(t.isNull({})).to.equal(false)
+  })
+
   it('isIterable', () => {
     const types = ['', [], new Set(), new Map(), {}]
     expect(t.isIterable(types[0])).to.equal(true)
@@ -91,6 +96,11 @@ describe('🐸  method that return a string', () => {
     expect(t.type({})).to.equal('object')
     expect(t.type(/^\/$/)).to.equal('regexp')
     expect(t.type(new Date())).to.equal('date')
+  })
+
+  it('strReverse', () => {
+    expect(t.strReverse('')).to.equal('')
+    expect(t.strReverse('abc')).to.equal('cba')
   })
 })
 

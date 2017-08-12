@@ -202,6 +202,13 @@
   }
 
   /**
+   * 字符串反转
+   * @param: str {String}
+   * @return: {String}
+   */
+  Br.strReverse = str => str.split('').reverse().join('')
+
+  /**
    * 判断数值是否为素数
    * @param: n {Number}
    * @return: {Boolean}
@@ -213,6 +220,13 @@
     }
     return n > 1
   }
+
+  /**
+   * 判断对象是否为空引用
+   * @param: obj {Object}
+   * @return: {Boolean}
+   */
+  Br.isNull = obj => typeof obj === 'object' && !obj
 
   /**
    * 数组的随机排序
@@ -487,7 +501,7 @@
    * @param: args {Array}
    * @return: {Function}
    */
-  Br.curry = (fn, ...args) => func.bind(fn, ...args)
+  Br.curry = (fn, ...args) => fn.bind(fn, ...args)
 
   /**
    * 记录操作耗时
