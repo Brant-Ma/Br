@@ -131,19 +131,6 @@
   }
 
   /**
-   * 线性搜索
-   * @param: arr {Array}
-   * @return: {Array}
-   */
-  Br.linearSearch = (arr = [], item) => {
-    const len = arr.length
-    for (let i = 0; i < len; i += 1) {
-      if (arr[i] === item) return i
-    }
-    return -1
-  }
-
-  /**
    * 二分搜索
    * @param: arr {Array}
    * @return: {Array}
@@ -238,24 +225,25 @@
   }
 
   /**
-   * 对象的拷贝
+   * 对象或数组的拷贝
    * @param: obj {Object}
-   * @param: deep {Boolean}
    * @return: {Object}
    */
-  Br.copy = (obj, deep = false) => {
-    const result = obj.slice ? [] : {}
-    if (Br.isType(obj, 'Array') && !deep) {
-      return obj.slice()
+  Br.copy = (obj, isDeep = false) => {
+    // 对象 or 数组的深拷贝
+    if (isDeep) {
+      return JSON.parse(JSON.stringify(obj))
     }
-    Object.keys(obj).forEach((p) => {
-      if (!Br.isType(obj[p], 'Array') && !Br.isType(obj[p], 'Object')) {
-        result[p] = obj[p]
-      } else {
-        result[p] = Br.copy(obj[p], deep)
+    // 对象的浅拷贝
+    if (Br.type(obj) === 'object') {
+      const result = {}
+      for (p in obj) {
+        if (has.call(obj, p)) result[p] = obj[p]
       }
-    })
-    return result
+      return result
+    }
+    // 数组的浅拷贝
+    return obj.slice()
   }
 
   /**
@@ -264,7 +252,7 @@
    * @param: upperValue {Number}
    * @return: {Number}
    */
-  Br.selectFrom = (lowerValue = 0, upperValue) => {
+  Br.selectFrom = (lowerValue, upperValue) => {
     if (upperValue === undefined) return lowerValue
     const choices = (upperValue - lowerValue) + 1
     return Math.floor((Math.random() * choices) + lowerValue)
@@ -276,16 +264,15 @@
    * @param: key {String}
    * @return: {Boolean}
    */
-  Br.hasPrototypeProperty = (obj, key) => (
-    (key in obj) && !has.call(obj, key)
-  )
+  Br.hasProtoProp = (obj, key) => (key in obj) && !has.call(obj, key)
 
   /**
    * 获取查询字符串的键值对形式
+   * @param: query {String}
    * @return: {Object}
    */
-  Br.queryString2keyValue = () => {
-    const str = location.search.length ? location.search.slice(1) : ''
+  Br.queryStr2keyValue = (query) => {
+    const str = query ? query.slice(1) : location.search.slice(1)
     const arr = str.length ? str.split('&') : []
     const result = {}
     let keyValue = []
@@ -308,7 +295,7 @@
     str += (str.indexOf('?') === -1 ? '?' : '&')
     const k = encodeURIComponent(key)
     const v = encodeURIComponent(value)
-    str = `str${k}=${v}`
+    str = `${str}${k}=${v}`
     return str
   }
 
@@ -426,6 +413,26 @@
       } else {
         fn.apply(this, args)
       }
+    }
+  }
+
+  /**
+   * 将 callback 风格转为 promise 风格
+   * @param: fn {Function}
+   * @return: {Function}
+   */
+  Br.promisify = function (fn) {
+    return function (...args) {
+      return new Promise((resolve, reject) => {
+        arr = [...args].concat((err, data) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(data)
+          }
+        })
+        fn(...arr)
+      })
     }
   }
 

@@ -9,6 +9,7 @@
     "semi": "off",
     "no-undef": "off",
     "func-names": "off",
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "no-restricted-syntax": "off"
   }
 }

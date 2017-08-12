@@ -1,11 +1,12 @@
 const { expect } = require('chai')
-const t = require('../utility.js')
+const t = require('../src/utility.js')
 
-describe('🐸  method that return a boolean', () => {
-  it('isPrime', () => {
-    expect(t.isPrime()).to.equal(false)
-    expect(t.isPrime(1)).to.equal(false)
-    expect(t.isPrime(17)).to.equal(true)
+describe('🐸  methods that return a boolean: ', () => {
+  it('hasProtoProp', () => {
+    const obj = {}
+    obj.someProperty = 'something'
+    expect(t.hasProtoProp(obj, 'toString')).to.equal(true)
+    expect(t.hasProtoProp(obj, 'someProperty')).to.equal(false)
   })
 
   it('strEqual', () => {
@@ -13,6 +14,12 @@ describe('🐸  method that return a boolean', () => {
     expect(t.strEqual('hello', 'Hello')).to.equal(false)
     expect(t.strEqual('hello', 'hello', false)).to.equal(true)
     expect(t.strEqual('hello', 'Hello', false)).to.equal(true)
+  })
+
+  it('isPrime', () => {
+    expect(t.isPrime()).to.equal(false)
+    expect(t.isPrime(1)).to.equal(false)
+    expect(t.isPrime(17)).to.equal(true)
   })
 
   it('isType', () => {
@@ -37,40 +44,29 @@ describe('🐸  method that return a boolean', () => {
   })
 })
 
-describe('🐸  method that return a number', () => {
+describe('🐸  methods that return a number: ', () => {
   it('selectFrom', () => {
-    const noArg = t.selectFrom()
     const oneArg = t.selectFrom(10)
     const normalChoice = t.selectFrom(10, 20)
-    expect(noArg).to.equal(0)
     expect(oneArg).to.equal(10)
     expect(normalChoice).to.be.at.least(10).and.at.most(20)
   })
 
-  const arr = [5, 4, 3, 2, 1]
-
-  const assertion4search = (oneArg, fail, successful) => {
-    expect(oneArg).to.equal(-1)
-    expect(fail).to.equal(-1)
-    expect(successful).to.equal(2)
-  }
-
-  it('linearSearch', () => {
-    const oneArg = t.linearSearch(arr)
-    const fail = t.linearSearch(arr, 6)
-    const successful = t.linearSearch(arr, 3)
-    assertion4search(oneArg, fail, successful)
+  it('addParam2URL', () => {
+    const url = 'http://brant.cc?name=es'
+    const result = t.addParam2URL(url, 'age', '6')
+    expect(result).to.equal('http://brant.cc?name=es&age=6')
   })
 
   it('binarySearch', () => {
-    const oneArg = t.binarySearch(arr)
-    const fail = t.binarySearch(arr, 6)
-    const successful = t.binarySearch(arr, 3)
-    assertion4search(oneArg, fail, successful)
+    const arr = [5, 4, 3, 2, 1]
+    expect(t.binarySearch(arr)).to.equal(-1)
+    expect(t.binarySearch(arr, 6)).to.equal(-1)
+    expect(t.binarySearch(arr, 3)).to.equal(2)
   })
 })
 
-describe('🐸  method that return a string', () => {
+describe('🐸  methods that return a string: ', () => {
   it('getYMD', () => {
     const noArg = t.getYMD()
     const normalYMD = t.getYMD(new Date(2001, 0, 1))
@@ -104,7 +100,7 @@ describe('🐸  method that return a string', () => {
   })
 })
 
-describe('🐸  method that return an array', () => {
+describe('🐸  methods that return an array: ', () => {
   const dist = [1, 2, 3, 4, 5]
   const srcCopy = [5, 4, 3, 2, 1]
 
@@ -150,7 +146,27 @@ describe('🐸  method that return an array', () => {
   })
 })
 
-describe('🐸  method that return a function', () => {
+describe('🐸  methods that return an object: ', () => {
+  it('copy', () => {
+    const obj = {
+      name: 'es6',
+      items: [1, 2, 3],
+    }
+    t.copy(obj).items[2] = 0
+    expect(obj.items[2]).to.equal(0)
+    t.copy(obj, true).items[1] = 0
+    expect(obj.items[1]).to.equal(2)
+  })
+
+  it('queryStr2keyValue', () => {
+    const str = '?name=es&age=6'
+    const obj = t.queryStr2keyValue(str)
+    expect(obj.name).to.equal('es')
+    expect(obj.age).to.equal('6')
+  })
+})
+
+describe('🐸  methods that return a function: ', () => {
   it('curry', () => {
     const func = (one, two, three) => one + two + three
     expect(t.curry(func)('a', 'b', 'c')).to.equal('abc')
