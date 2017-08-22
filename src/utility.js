@@ -25,70 +25,6 @@
   }
 
   /**
-   * 冒泡排序
-   * @param: src {Array}
-   * @return: {Array}
-   */
-  Br.bubbleSort = (src = []) => {
-    const [...arr] = src
-    const len = arr.length
-    // 共 len - 1 轮
-    for (let i = 0; i < len - 1; i += 1) {
-      // 已冒泡出 i 个最大值，本轮从第 1 个开始，到第 len - i 个
-      for (let j = 0; j < len - i - 1; j += 1) {
-        if (arr[j] > arr[j + 1]) {
-          [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
-        }
-      }
-    }
-    return arr
-  }
-
-  /**
-   * 选择排序
-   * @param: src {Array}
-   * @return: {Array}
-   */
-  Br.selectionSort = (src = []) => {
-    const [...arr] = src
-    const len = arr.length
-    // 共 len - 1 轮
-    for (let i = 0; i < len - 1; i += 1) {
-      // 假设第 1 + i 个是最小值
-      let min = i
-      // 已选择出 i 个最小值，本轮从第 1 + i + 1 个开始，到最后一个
-      for (let j = i + 1; j < len; j += 1) {
-        if (arr[min] > arr[j]) {
-          min = j
-        }
-      }
-      [arr[i], arr[min]] = [arr[min], arr[i]]
-    }
-    return arr
-  }
-
-  /**
-   * 插入排序
-   * @param: src {Array}
-   * @return: {Array}
-   */
-  Br.insertionSort = (src = []) => {
-    const [...arr] = src
-    const len = arr.length
-    // 共 len - 1 轮
-    for (let i = 1; i < len; i += 1) {
-      // 对于第 i + 1 个待插入的元素，遍历已排好序的前 i 个
-      for (let j = 0; j < i; j += 1) {
-        if (arr[j] > arr[i]) {
-          arr.splice(j, 0, arr[i])
-          arr.splice(i + 1, 1)
-        }
-      }
-    }
-    return arr
-  }
-
-  /**
    * 合并数组
    * @param: left {Array}
    * @param: right {Array}
@@ -214,6 +150,59 @@
    * @return: {Boolean}
    */
   Br.isNull = obj => typeof obj === 'object' && !obj
+
+  /**
+   * 判断对象是否为 Promise 实例
+   * @param: obj {Object}
+   * @return: {Boolean}
+   */
+  Br.isPromise = (obj) => {
+    if (Promise) return Br.isType(obj, 'promise')
+    return Br.isType(obj, 'object') && Br.isType(obj.then, 'function')
+  }
+
+  /**
+   * 封装 Ajax 操作为 Promise 实例
+   * @param: url {String}
+   * @return: {Promise}
+   */
+  Br.fetch = (url) => {
+    if (typeof url !== 'string') throw Error('`url` should be a string')
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest()
+      xhr.open('GET', url, true)
+      xhr.onload = () => {
+        const code = xhr.status
+        if ((code >= 200 && code < 300) || code === 304) {
+          resolve(xhr.responseText)
+        } else {
+          reject(xhr.statusText)
+        }
+      }
+      xhr.onerror = () => {
+        reject(Error(xhr.statusText))
+      }
+      xhr.send()
+    })
+  }
+
+  /**
+   * 封装含超时抛错的异步操作为 Promise 实例
+   * @param: task {Promise}
+   * @param: time {Number}
+   * @return: {Promise}
+   */
+  Br.timeoutPromise = (task, time = 1000) => {
+    if (!Br.isPromise(task)) throw Error('`task` should be a promise')
+    if (typeof time !== 'number') throw Error('`time` should be a number')
+    const timer = new Promise((resolve) => {
+      setTimeout(resolve, time)
+    })
+    timer.then(() => {
+      throw Error('timeout')
+    })
+    return Promise.race([task, timer])
+  }
 
   /**
    * 数组的随机排序

@@ -77,6 +77,33 @@ So, that's the methods below:
   Br.permit(obj, '0001')
   ```
 
+- **fetch**
+
+  ```javascript
+  const url = 'http://httpbin.org/get'
+
+  Br.fetch(url).then((res) => {
+    console.log(res)
+  }).catch((err) => {
+    console.log(err)
+  })
+  ```
+
+- **timeoutPromise**
+
+  ```javascript
+  const task = Br.getURL('http://httpbin.org/get')
+
+  // set a 1000ms timeout
+  Br.timeoutPromise(task, 1000).then((value) => {
+    console.log(value)
+  }).catch((reason) => {
+    if (reason.message === 'timeout') {
+      console.log('Fetch data failed')
+    }
+  })
+  ```
+
 - **isType**
 
   ```javascript
@@ -181,30 +208,6 @@ So, that's the methods below:
   bar(2)  // 3
   ```
 
-- **bubbleSort**
-
-  ```javascript
-  const src = [5, 4, 3, 2, 1]
-
-  Br.bubbleSort(src)  // [1, 2, 3, 4, 5]
-  ```
-
-- **selectionSort**
-
-  ```javascript
-  const src = [5, 4, 3, 2, 1]
-
-  Br.selectionSort(src)  // [1, 2, 3, 4, 5]
-  ```
-
-- **insertionSort**
-
-  ```javascript
-  const src = [5, 4, 3, 2, 1]
-
-  Br.insertionSort(src)  // [1, 2, 3, 4, 5]
-  ```
-
 - **mergeSort**
 
   ```javascript
@@ -286,6 +289,13 @@ So, that's the methods below:
   ```javascript
   Br.isNull(null)  // true
   Br.isNull({})    // false
+  ```
+
+- **isPromise**
+
+  ```javascript
+  Br.isPromise(Promise.resolve(42))  // true
+  Br.isPromise(42)                   // false
   ```
 
 - **shuffle**

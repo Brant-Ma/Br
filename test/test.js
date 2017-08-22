@@ -42,6 +42,11 @@ describe('🐸  methods that return a boolean: ', () => {
     expect(t.isIterable(types[3])).to.equal(true)
     expect(t.isIterable(types[4])).to.equal(false)
   })
+
+  it('isPromise', () => {
+    expect(t.isPromise(Promise.resolve(42))).to.equal(true)
+    expect(t.isPromise(42)).to.equal(false)
+  })
 })
 
 describe('🐸  methods that return a number: ', () => {
@@ -109,27 +114,6 @@ describe('🐸  methods that return an array: ', () => {
     expect(src).to.deep.equal(srcCopy)
     expect(sortedArray).to.deep.equal(dist)
   }
-
-  it('bubbleSort', () => {
-    const src = [5, 4, 3, 2, 1]
-    const noArg = t.bubbleSort()
-    const sortedArray = t.bubbleSort(src)
-    assertion4sort(noArg, src, sortedArray)
-  })
-
-  it('selectionSort', () => {
-    const src = [5, 4, 3, 2, 1]
-    const noArg = t.selectionSort()
-    const sortedArray = t.selectionSort(src)
-    assertion4sort(noArg, src, sortedArray)
-  })
-
-  it('insertionSort', () => {
-    const src = [5, 4, 3, 2, 1]
-    const noArg = t.insertionSort()
-    const sortedArray = t.insertionSort(src)
-    assertion4sort(noArg, src, sortedArray)
-  })
 
   it('mergeSort', () => {
     const src = [5, 4, 3, 2, 1]
